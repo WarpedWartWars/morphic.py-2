@@ -907,7 +907,7 @@
 
     it renders the morph as a solid rectangle completely filling its
     area with its current color.
-    
+
     Notice how the coordinates for the fillRect() call are relative
     to the morph's own position: The rendered rectangle's origin is always
     located at (0, 0) regardless of the morph's actual position in the World.
@@ -918,20 +918,20 @@
     If your new morph also needs to determine its extent and, e.g. to
     encompass one or several other morphs, or arrange the layout of its
     submorphs, make sure to also override the default
-    
+
         fixLayout()
-    
+
     method.
-    
+
     NOTE: If you need to set the morph's extent inside, in order to avoid
     infinite recursion instead of calling morph.setExtent() - which will
     in turn call morph.fixLayout() again - directly modify the morph's
-    
+
         bounds
 
     property. Bounds is a rectable on which you can also use the same
     size-setters, e.g. by calling:
-    
+
         this.bounds.setExtent()
 
 
@@ -940,9 +940,9 @@
     In case your new morph needs to support pixel-perfect collision detection
     with other morphs or pointing devices such as the mouse or a stylus you
     can set the inherited attribute
-    
+
         isFreeForm = bool
-    
+
     to "true" (default is "false"). This makes sense the more your morph's
     visual shape diverges from a rectangle. For example, if you create a
     circular filled morph the default setting will register mouse-events
@@ -965,14 +965,14 @@
     cache your morph's current shape, so it doesn't have to be re-drawn onto a
     new Canvas element every time the mouse moves over its bounding box.
     For this you can set then inherited
-    
+
         isCachingImage = bool
-        
+
     attribute to "true" instead of the default "false" value. This will
     significantly speed up collision detection and smoothen animations that
     continuously perform collision detection. However, it will also consume
     more memory. Therefore it's best to use this setting with caution.
-    
+
     Snap! caches the shapes of sprites but not those of blocks. Instead it
     manages the insides of C- and E-shaped blocks through the morphic "holes"
     mechanism.
@@ -986,20 +986,20 @@
     registered.
 
     By default the inherited
-    
+
         holes = []
 
     property is an empty array. You can add one or more morphic Rectangle
     objects to this list, representing regions, in which occurring events will
     instead be passed on to the morph underneath.
-    
+
     Note that, same with the render() method, the coordinates of these
     rectangular holes must be specified relative to your morph's position.
 
     If you specify holes you might find the need to adjust their layout
     depending on the layout of your morph. To accomplish this you can override
     the inherited
-    
+
         fixHolesLayout()
 
     method.
@@ -1013,13 +1013,13 @@
     on a touch screen device, or you want the user to be able to "pinch" or
     otherwise distort a shape interactively. In all of these situations you'll
     want your morph to frequently rerender its shape.
-    
+
     You can accomplish this, by calling
 
         rerender()
 
     after every change to your morph's appearance that requires rerendering.
-    
+
     Such changes are usually only happening when the morph's dimensions or
     other visual properties - such as its color - changes.
 
@@ -1522,7 +1522,7 @@ class Animation:
         self.destination = None
         self.isActive = False
         self.start()
-    
+
     def start(self):
         # (re-) activate the animation, e.g. if is has previously completed,
         # make sure to plug it into something that repeatedly triggers
@@ -1530,7 +1530,7 @@ class Animation:
         self.endTime = time.time_ns()//1000000
         self.destination = self.getter(self) + self.delta
         self.isActive = True
-    
+
     def step(self):
         if not self.isActive: return
         now = time.time_ns()//1000000
@@ -1600,7 +1600,7 @@ class Color:
 
         def dist(a, b):
             return abs(a-b)
-        
+
         return (
             isinstance(other, Color) and
             dist(self.r, other.r) < threshold and
@@ -1795,15 +1795,15 @@ class Point:
     # repr, e.g. 'Point(12, 68)'
     def __repr__(self):
         return "Point(" + str(self.x) + ", " + str(self.y) + ")"
-    
+
     # str, e.g. '12@68'
     def __str__(self):
         return str(self.x) + "@" + str(self.y)
-    
+
     # Point copying:
     def copy(self):
         return Point(self.x, self.y)
-    
+
     # Point comparison:
     def __eq__(self, other):
         return (
@@ -1811,30 +1811,35 @@ class Point:
             self.x == other.x and
             self.y == other.y
         )
+
     def __lt__(self, other):
         return (
             isinstance(other, Point) and
             self.x < other.x and
             self.y < other.y
         )
+
     def __gt__(self, other):
         return (
             isinstance(other, Point) and
             self.x > other.x and
             self.y > other.y
         )
+
     def __ge__(self, other):
         return (
             isinstance(other, Point) and
             self.x >= other.x and
             self.y >= other.y
         )
+
     def __le__(self, other):
         return (
             isinstance(other, Point) and
             self.x <= other.x and
             self.y <= other.y
         )
+
     def max(self, other):
         if isinstance(other, Point):
             return Point(
@@ -1842,6 +1847,7 @@ class Point:
                 max(self.y, other.y)
             )
         return self
+
     def min(self, other):
         if isinstance(other, Point):
             return Point(
@@ -1849,23 +1855,26 @@ class Point:
                 min(self.y, other.y)
             )
         return self
-    
+
     # Point conversion:
     def __round__(self, ndigits=0):
         return Point(
             round(self.x, ndigits),
             round(self.y, ndigits)
         )
+
     def __abs__(self):
         return Point(
             abs(self.x),
             abs(self.y)
         )
+
     def __neg__(self):
         return Point(
             -self.x,
             -self.y
         )
+
     def mirror(self, axis=None):
         if not isinstance(axis, Point):
             axis = Point(1, 1)
@@ -1877,19 +1886,161 @@ class Point:
             self.x+2*(x-(x*vx-y*vy)*r*vx),
             self.y+2*(y-(y*vy-x*vx)*r*vy)
         )
+
     def __floor__(self):
         return Point(
             math.floor(self.x),
             math.floor(self.y)
         )
+
     def __ceil__(self):
         return Point(
             math.ceil(self.x),
             math.ceil(self.y)
         )
-    
-    # Point arithmetic
+
+    # Point arithmetic:
     def __add__(self, other):
         if isinstance(other, Point):
             return Point(self.x+other.x, self.y+other.y)
         return Point(self.x+other, self.y+other)
+
+    def __sub__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x-other.x, self.y-other.y)
+        return Point(self.x-other, self.y-other)
+
+    def __mul__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x*other.x, self.y*other.y)
+        return Point(self.x*other, self.y*other)
+
+    def __truediv__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x/other.x, self.y/other.y)
+        return Point(self.x/other, self.y/other)
+
+    __div__ = __truediv__
+
+    def __floordiv__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x//other.x, self.y//other.y)
+        return Point(self.x//other, self.y//other)
+
+    def __mod__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x%other.x, self.y%other.y)
+        return Point(self.x%other, self.y%other)
+
+    def __radd__(self, other):
+        if isinstance(other, Point):
+            return Point(self.x+other.x, self.y+other.y)
+        return Point(self.x+other, self.y+other)
+
+    def __rsub__(self, other):
+        if isinstance(other, Point):
+            return Point(other.x-self.x, other.y-self.y)
+        return Point(other-self.x, other-self.y)
+
+    def __rmul__(self, other):
+        if isinstance(other, Point):
+            return Point(other.x*self.x, other.y*self.y)
+        return Point(other*self.x, other*self.y)
+
+    def __rtruediv__(self, other):
+        if isinstance(other, Point):
+            return Point(other.x/self.x, other.y/self.y)
+        return Point(other/self.x, other/self.y)
+
+    __rdiv__ = __rtruediv__
+
+    def __rfloordiv__(self, other):
+        if isinstance(other, Point):
+            return Point(other.x//self.x, other.y//self.y)
+        return Point(other//self.x, other//self.y)
+
+    def __rmod__(self, other):
+        if isinstance(other, Point):
+            return Point(other.x%self.x, other.y%self.y)
+        return Point(other%self.x, other%self.y)
+
+    # Point polar coordinates:
+    @property
+    def r(self):
+        return math.sqrt(self.dot(self))
+
+    @property
+    def theta(self):
+        if self.x == 0:
+            if self.y == 0:
+                return 0
+            return 90
+        return degrees(math.atan(self.y/self.x))
+
+    @classmethod
+    def theta_r_to_x_y(cls, theta, r):
+        return Point(
+            math.cos(theta),
+            math.sin(theta)
+        ) * r
+
+    # Point functions:
+    def __cross__(self, other):
+        if isinstance(other, Point):
+            stom = self * other.mirror()
+            return stom.x-stom.y
+        return NotImplemented
+
+    cross = __cross__
+
+    def __dot__(self, other):
+        if isinstance(other, Point):
+            sto = self * other
+            return sto.x + sto.y
+        return NotImplemented
+
+    dot = __dot__
+
+    def distanceTo(self, other):
+        return (other-self).r
+
+    def rotate(self, amount):
+        return Point.theta_r_to_x_y(self.theta + amount, self.r)
+
+    flip = mirror
+
+    # I don't know what this does.
+    def distanceAngle(self, dist, angle):
+        deg = angle
+        while not -270 < deg < 270:
+            if deg > 270:
+                deg -= 360
+            elif deg < -270:
+                deg += 360
+        if -90 <= deg <= 90:
+            x = math.sin(radians(deg)) * dist
+            y = Point(dist, x).r
+            return Point(x + self.x, y - self.y)
+        x = math.sin(radians(180 - deg)) * dist
+        y = Point(dist, x).r
+        return Point(x + self.x, y + self.y)
+
+    # Point transformation:
+    def scale(self, scale):
+        return self * scale
+
+    def translate(self, delta):
+        return self + delta
+
+    # Point conversion:
+    @property
+    def asTuple(self):
+        return self.x, self.y
+
+    @property
+    def asList(self):
+        return [self.x, self.y]
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
